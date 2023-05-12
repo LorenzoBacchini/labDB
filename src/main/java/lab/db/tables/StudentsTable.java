@@ -170,7 +170,7 @@ package lab.db.tables;
             "Update " + TABLE_NAME + " Set " + 
                 "firstName = ?," + 
                 "lastName =  ?," +
-                "birthday ? " + 
+                "birthday = ? " + 
             "where id = ?";
         PreparedStatement ps;
         try{
