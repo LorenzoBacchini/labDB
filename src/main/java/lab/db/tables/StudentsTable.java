@@ -57,13 +57,10 @@ package lab.db.tables;
             ps = this.connection.prepareStatement(query);
             ps.setInt(1,id);
             ResultSet rs = ps.executeQuery();
-            if(rs.getInt("id") != 0){
-                return Optional.of(readStudentsFromResultSet(rs).get(0));
-            }
-            //Solution of the tutor
-            //return readStudentsFromResultSet(rs).stream().findFirst();
-        } catch (SQLException e) {}
-        return Optional.empty();
+            return readStudentsFromResultSet(rs).stream().findFirst();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
      }
 
      /**
@@ -106,9 +103,9 @@ package lab.db.tables;
             s = this.connection.createStatement();
             ResultSet rs = s.executeQuery(query);
             return readStudentsFromResultSet(rs);
-        }catch(SQLException e){}
-        
-        return List.of();
+        }catch(SQLException e){
+            throw new IllegalStateException(e);
+        }
      }
 
      public List<Student> findByBirthday(final Date date) {
@@ -119,9 +116,9 @@ package lab.db.tables;
             ps.setDate(1, Utils.dateToSqlDate(date));
             ResultSet rs = ps.executeQuery();
             return readStudentsFromResultSet(rs);
-        } catch (SQLException e) {}
-        
-        return List.of();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
      }
 
      @Override
@@ -132,9 +129,9 @@ package lab.db.tables;
             s = this.connection.createStatement();
             s.executeUpdate(query);
             return true;
-        }catch(SQLException e){}
-        
-        return false;
+        }catch(SQLException e){
+            return false;
+        }
      }
 
      @Override
@@ -149,9 +146,9 @@ package lab.db.tables;
             ps.setDate(4, Utils.dateToSqlDate(student.getBirthday().isPresent() ? student.getBirthday().get() : null));
             ps.executeUpdate();
             return true;
-        }catch(SQLException e){}
-        
-        return false;
+        }catch(SQLException e){
+            return false;
+        }
      }
 
      @Override
@@ -162,9 +159,9 @@ package lab.db.tables;
             ps = this.connection.prepareStatement(query);
             ps.setInt(1, id);
             return (ps.executeUpdate() > 0);
-        }catch(SQLException e){}
-        
-        return false;
+        }catch(SQLException e){
+            throw new IllegalStateException(e);
+        }
      }
 
      @Override
@@ -183,8 +180,8 @@ package lab.db.tables;
             ps.setDate(3, Utils.dateToSqlDate(student.getBirthday().get()));
             ps.setInt(4, student.getId());
             return (ps.executeUpdate() > 0);
-        }catch(SQLException e){}
-        
-        return false;
+        }catch(SQLException e){
+            throw new IllegalStateException(e);
+        }
      }
  }
